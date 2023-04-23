@@ -19,6 +19,11 @@ class Interface(QtWidgets.QWidget):
         self.update_table()
         self.ui.pushButton.clicked.connect(self.create_report)
         self.ui.pushButton_2.clicked.connect(self.generation_report)
+        self.ui.pushButton_3.clicked.connect(self.clear)
+
+    def clear(self):
+        self.accept_product.clear()
+        self.update_table()
 
     def else_info(self, text):
         msg = QMessageBox()

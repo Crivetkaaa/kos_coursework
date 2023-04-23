@@ -17,13 +17,10 @@ class Interface(QtWidgets.QWidget):
         self.accept_product = []
         DB.create_table()
         self.update_table()
-        self.ui.pushButton.clicked.connect(self.create_report)
+        self.update_combobox()
+        self.ui.pushButton.clicked.connect(self.accept_product_name)
         self.ui.pushButton_2.clicked.connect(self.generation_report)
         self.ui.pushButton_3.clicked.connect(self.clear)
-
-    def clear(self):
-        self.accept_product.clear()
-        self.update_table()
 
     def else_info(self, text):
         msg = QMessageBox()
@@ -48,22 +45,12 @@ class Interface(QtWidgets.QWidget):
             data = DB.execute_res(text=text)
             self.generate_table(data, cheker=True)
         else:
-            self.else_info(text='Добавте продукты для отчёта.')        
+            self.else_info(text='Добавте продукты для отчёта.')    
 
     def create_num(self, len):
         num = [i for i in range(0, len)]
         return num
     
-    def update_combobox(self, data):
-        self.ui.comboBox.clear()
-        for item in data:
-            if item[0] not in self.accept_product:
-                self.ui.comboBox.addItem(item[0])
-
-    def update_table(self):
-        data = DB.execute_res(text="SELECT * FROM users")
-        self.update_combobox(data)
-        self.generate_table(data)
 
     def generate_table(self, data, cheker=False):
         num = self.create_num(len(data))
@@ -93,12 +80,42 @@ class Interface(QtWidgets.QWidget):
             self.ui.tableWidget.setItem(endd+1, 3, end_prices)
             
 
-    def create_report(self):
+    def update_table(self):
+        data = DB.execute_res(text="SELECT * FROM users")
+        
+        self.update_combobox()
+        self.generate_table(data)
+
+    def clear(self):
+        self.accept_product.clear()
+        self.update_combobox()
+        self.update_table()
+
+    def get_data(self, raw_data):
+        data = []
+        for item in raw_data:
+            if item[0] not in data:
+                data.append(item[0])
+        return data
+
+    def check_product(self, data):
+        new_data = []
+        for item in data:
+            if item not in self.accept_product:
+                new_data.append(item)
+        return new_data
+    
+    def update_combobox(self):
+        raw_data = DB.execute_res("SELECT * FROM users")
+        data = self.get_data(raw_data)
+        new_data = self.check_product(data)
+        self.ui.comboBox.clear()     
+        self.ui.comboBox.addItems(new_data)
+
+    def accept_product_name(self):
         product = self.ui.comboBox.currentText()
         self.accept_product.append(product)
-        data = DB.execute_res(text="SELECT * FROM users")
-        self.update_combobox(data)
-        
+        self.update_combobox()
 
 def main():
     app = QtWidgets.QApplication(sys.argv)

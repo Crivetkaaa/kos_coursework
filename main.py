@@ -87,6 +87,7 @@ class Interface(QtWidgets.QWidget):
             self.ui.tableWidget.setItem(endd+1, 0, end)
             self.ui.tableWidget.setItem(endd+1, 3, end_prices)
             
+
     def create_report(self):
         product = self.ui.comboBox.currentText()
         self.accept_product.append(product)

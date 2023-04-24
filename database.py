@@ -17,19 +17,6 @@ class DB:
         conn, cur = cls.open_conn()
         cur.execute(text)
         cls.close_conn(conn, cur)
-
-
-    @classmethod
-    def create_table(cls):
-        conn, cur = cls.open_conn()
-        cur.execute("""CREATE TABLE IF NOT EXISTS users (
-            product_name TEXT,
-            product_price INT,
-            product_count INT
-        );""")
-        cls.close_conn(conn, cur)
-        
-        print('Таблицы успешно созданы!')
     
     @staticmethod
     def close_conn(conn, cur):

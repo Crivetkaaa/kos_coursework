@@ -15,7 +15,6 @@ class Interface(QtWidgets.QWidget):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.accept_product = []
-        DB.create_table()
         self.update_table()
         self.update_combobox()
         self.ui.pushButton.clicked.connect(self.accept_product_name)

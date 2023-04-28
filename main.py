@@ -36,7 +36,6 @@ class Interface(QtWidgets.QWidget):
         if len(self.accept_product) > 0:
             text = "SELECT * FROM users WHERE"
             count = 0
-            print(self.accept_product)
             for name in self.accept_product:
                 if count == 0:
                     text += f" product_name='{name}'"
@@ -44,7 +43,6 @@ class Interface(QtWidgets.QWidget):
                 else:
                     text += f" OR product_name='{name}'"
            
-            print(text)
             data = DB.execute_res(text=text)
             self.generate_table(data, cheker=True)
         else:
@@ -77,7 +75,6 @@ class Interface(QtWidgets.QWidget):
             endd = i
         if cheker:
             self.ui.tableWidget.setRowCount(num[-1]+2)
-            print(end_price)
             end = QtWidgets.QTableWidgetItem("Итого:")
             end_prices  = QtWidgets.QTableWidgetItem(str(end_price))
             self.ui.tableWidget.setItem(endd+1, 0, end)

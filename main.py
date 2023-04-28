@@ -21,6 +21,9 @@ class Interface(QtWidgets.QWidget):
         self.ui.pushButton_2.clicked.connect(self.generation_report)
         self.ui.pushButton_3.clicked.connect(self.clear)
 
+
+
+    # "Функция вывода ошибки, принимает текст ошибки"
     def else_info(self, text):
         msg = QMessageBox()
         msg.setWindowTitle("TypeError")
@@ -28,6 +31,7 @@ class Interface(QtWidgets.QWidget):
         msg.setIcon(QMessageBox.Warning)
         msg.exec_()
 
+    # "Создаёт запрос к базе данных и делает запрос к БД"
     def generation_report(self):
         if len(self.accept_product) > 0:
             text = "SELECT * FROM users WHERE"
@@ -46,11 +50,12 @@ class Interface(QtWidgets.QWidget):
         else:
             self.else_info(text='Добавте продукты для отчёта.')    
 
+    # "Херня просто делает массив вида [0, 1, 2, 3, ..., len]"
     def create_num(self, len):
         num = [i for i in range(0, len)]
         return num
     
-
+    # "Создаёт таблицу и заполняет её"
     def generate_table(self, data, cheker=False):
         num = self.create_num(len(data))
         
@@ -72,24 +77,26 @@ class Interface(QtWidgets.QWidget):
             endd = i
         if cheker:
             self.ui.tableWidget.setRowCount(num[-1]+2)
-
+            print(end_price)
             end = QtWidgets.QTableWidgetItem("Итого:")
             end_prices  = QtWidgets.QTableWidgetItem(str(end_price))
             self.ui.tableWidget.setItem(endd+1, 0, end)
-            self.ui.tableWidget.setItem(endd+1, 3, end_prices)
+            self.ui.tableWidget.setItem(endd+1, 2, end_prices)
             
-
+    # "Обновляет таблицу"
     def update_table(self):
         data = DB.execute_res(text="SELECT * FROM users")
         
         self.update_combobox()
         self.generate_table(data)
 
+    # "Очищает комбобокс"
     def clear(self):
         self.accept_product.clear()
         self.update_combobox()
         self.update_table()
 
+    # "Форматирует полученую инфу из бд"
     def get_data(self, raw_data):
         data = []
         for item in raw_data:
@@ -97,6 +104,7 @@ class Interface(QtWidgets.QWidget):
                 data.append(item[0])
         return data
 
+    # "Проверяет какие продукты выбрал пльзователь"
     def check_product(self, data):
         new_data = []
         for item in data:
@@ -104,6 +112,7 @@ class Interface(QtWidgets.QWidget):
                 new_data.append(item)
         return new_data
     
+    # "Обновляет комбобокс убирает выбранные продукты из списка"
     def update_combobox(self):
         raw_data = DB.execute_res("SELECT * FROM users")
         data = self.get_data(raw_data)
@@ -111,11 +120,13 @@ class Interface(QtWidgets.QWidget):
         self.ui.comboBox.clear()     
         self.ui.comboBox.addItems(new_data)
 
+    # "Получает название продукта из комбобокса"
     def accept_product_name(self):
         product = self.ui.comboBox.currentText()
         self.accept_product.append(product)
         self.update_combobox()
 
+# "Функция старта"
 def main():
     app = QtWidgets.QApplication(sys.argv)
     mywin = Interface()
